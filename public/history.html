@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Temperaturverlauf</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background-image: url('selchfleisch.jpeg');
+      padding-top: 0;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .history-container {
+      width: min(92vw, 800px);
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      backdrop-filter: blur(6px);
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .history-header h1 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .back-btn {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: #a0c8e0;
+      font-family: inherit;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      padding: 0.4rem 1rem;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .back-btn:hover {
+      background: rgba(126, 184, 218, 0.2);
+      border-color: rgba(126, 184, 218, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="history-container">
+    <div class="history-header">
+      <h1>Temperaturverlauf</h1>
+      <a href="/" class="back-btn">← Zurück</a>
+    </div>
+    <canvas id="historyChart"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    fetch('/api/temperature/history')
+      .then(res => res.json())
+      .then(data => {
+        const labels = data.map(e => {
+          const d = new Date(e.timestamp);
+          return d.toLocaleString('de-DE', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+        });
+        const values = data.map(e => e.temperature);
+
+        new Chart(document.getElementById('historyChart'), {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [{
+              label: 'Temperatur (°C)',
+              data: values,
+              borderColor: '#7eb8da',
+              backgroundColor: 'rgba(126, 184, 218, 0.1)',
+              borderWidth: 2,
+              pointRadius: data.length > 100 ? 0 : 3,
+              tension: 0.3,
+              fill: true,
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { labels: { color: '#e8e8e8' } }
+            },
+            scales: {
+              x: {
+                ticks: { color: '#a0a0a0', maxTicksLimit: 8, maxRotation: 30 },
+                grid: { color: 'rgba(255,255,255,0.08)' }
+              },
+              y: {
+                ticks: { color: '#a0a0a0' },
+                grid: { color: 'rgba(255,255,255,0.08)' }
+              }
+            }
+          }
+        });
+      });
+  </script>
+</body>
+</html>

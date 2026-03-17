@@ -17,20 +17,9 @@
       <span class="unit">°C</span>
     </div>
     <p class="last-updated" id="lastUpdated">Noch keine Daten empfangen.</p>
-    <button class="history-btn" id="historyBtn">Verlauf anzeigen</button>
+    <a href="/history.html" class="history-btn">Verlauf anzeigen</a>
   </main>
 
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-      <div class="modal-header">
-        <span>Temperaturverlauf</span>
-        <button class="modal-close" id="modalClose">✕</button>
-      </div>
-      <canvas id="historyChart"></canvas>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
