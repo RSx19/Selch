@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Temperatur Anzeige</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Temperatur</h1>
+    <div class="temperature-display" id="temperatureDisplay">
+      <span class="value" id="temperatureValue">--</span>
+      <span class="unit">°C</span>
+    </div>
+    <p class="last-updated" id="lastUpdated">Noch keine Daten empfangen.</p>
+    <button class="history-btn" id="historyBtn">Verlauf anzeigen</button>
+  </main>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <span>Temperaturverlauf</span>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <canvas id="historyChart"></canvas>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
