@@ -56,6 +56,38 @@
       background: rgba(126, 184, 218, 0.2);
       border-color: rgba(126, 184, 218, 0.5);
     }
+
+    .chart-controls {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .chart-hint {
+      color: #808080;
+      font-size: 0.75rem;
+      align-self: center;
+      margin-right: auto;
+    }
+
+    .reset-btn {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: #a0c8e0;
+      font-family: inherit;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      padding: 0.35rem 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .reset-btn:hover {
+      background: rgba(126, 184, 218, 0.2);
+      border-color: rgba(126, 184, 218, 0.5);
+    }
   </style>
 </head>
 <body>
@@ -65,9 +97,15 @@
       <a href="/" class="back-btn">← Zurück</a>
     </div>
     <canvas id="historyChart"></canvas>
+    <div class="chart-controls">
+      <span class="chart-hint">Scrollen zum Zoomen · Ziehen zum Verschieben</span>
+      <button class="reset-btn" id="resetZoom">Zoom zurücksetzen</button>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
   <script>
     fetch('/api/temperature/history')
       .then(res => res.json())
@@ -78,7 +116,7 @@
         });
         const values = data.map(e => e.temperature);
 
-        new Chart(document.getElementById('historyChart'), {
+        const chart = new Chart(document.getElementById('historyChart'), {
           type: 'line',
           data: {
             labels,
@@ -96,7 +134,18 @@
           options: {
             responsive: true,
             plugins: {
-              legend: { labels: { color: '#e8e8e8' } }
+              legend: { labels: { color: '#e8e8e8' } },
+              zoom: {
+                zoom: {
+                  wheel: { enabled: true },
+                  pinch: { enabled: true },
+                  mode: 'x',
+                },
+                pan: {
+                  enabled: true,
+                  mode: 'x',
+                },
+              }
             },
             scales: {
               x: {
@@ -110,6 +159,8 @@
             }
           }
         });
+
+        document.getElementById('resetZoom').addEventListener('click', () => chart.resetZoom());
       });
   </script>
 </body>
